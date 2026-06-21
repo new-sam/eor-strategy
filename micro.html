@@ -126,7 +126,7 @@
   .kpibox li b{color:var(--navy)} .kpibox .muted{color:var(--sub)}
 </style>
 </head>
-<body class="">
+<body>
 
 <header class="hero" id="hero">
   <div class="wrap">
@@ -150,7 +150,7 @@
   <div class="callout navy">
     <p class="big-quote">FYI는 인재↔기업 플라이휠로, 먼저 <u><mark>하이 탤런트 인재풀</mark>을 확보한다</u> (대학·대기업 출신 등 좋은 인재).&nbsp;</p><p class="big-quote">그 다음, 이 인재를 <u><b>살아있는 데이터</b>로 작동할 수 있는 루프를 확보한다.&nbsp;</u></p>
   </div>
-  <div class="svgwrap" contenteditable="false">
+  <div class="svgwrap">
     <svg class="fig" viewBox="0 0 860 660" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <marker id="ah" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7,3 L0,6 Z" fill="#1f7a4d"></path></marker>
@@ -194,7 +194,7 @@
   <table>
     <tbody><tr><th>질문</th><th>답</th></tr>
     <tr><td>무엇을 보는가</td><td>FYI가 만드는 <b>인재↔기업 플라이휠</b>과 단계별 실행 전략</td></tr>
-    <tr class="hlrow"><td>1단계 (지금·최우선)</td><td><b>하이 탤런트 인재풀 확보</b> — 대학·대기업 출신 등 좋은 인재 (보상금 없이도 지원 1,000여 확인)</td></tr>
+    <tr class="hlrow"><td>1단계 (지금·최우선)</td><td><b>하이 탤런트 인재풀 확보</b> — 대학·대기업 출신 등 좋은 인재 (보상금 없이도 인재 모집 기작은 확인)</td></tr>
     <tr><td>2단계 (다음)</td><td><b>살아있는 인재 DB</b> — 이력서·상태를 계속 갱신(리멤버·링크드인식), 커뮤니티가 라이브하게 유지</td></tr>
     <tr><td>핵심</td><td>좋은 인재를 확보해 <b>기업의 채용 비용을 줄여주는 것</b></td></tr>
     <tr><td>기업 가속</td><td><b>공고비 무료 · 2개월 채용 개런티</b>로 기업 유입을 앞당긴다</td></tr>
@@ -204,7 +204,7 @@
 <!-- 1 -->
 <section id="exec"><div class="wrap">
   <h2><span class="num">1</span> 단계별 FYI 실행 전략</h2>
-  <div class="svgwrap" contenteditable="false">
+  <div class="svgwrap">
     <svg class="fig" viewBox="0 0 860 660" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <marker id="ah2" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7,3 L0,6 Z" fill="#1f7a4d"></path></marker>
@@ -315,10 +315,10 @@
 </div></footer>
 
 <div id="tbar">
-  <button id="eb" onclick="tEdit()">✏️ 편집</button>
+  <button id="eb" onclick="tEdit()" class="">✏️ 편집</button>
   <button onclick="tSave()">💾 저장</button>
   <button onclick="window.print()">🖨 PDF</button>
-  <button id="pubb" onclick="tPublish()" style="background:#0f6b53">🚀 발행</button>
+  <button id="pubb" onclick="tPublish()" style="background:#0f6b53" disabled="">⏳ 발행 중...</button>
 </div>
 <script>
 var EDIT=false;
