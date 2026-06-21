@@ -126,7 +126,7 @@
   .kpibox li b{color:var(--navy)} .kpibox .muted{color:var(--sub)}
 </style>
 </head>
-<body class="">
+<body class="edit-on">
 
 <header class="hero" id="hero">
   <div class="wrap">
@@ -148,9 +148,9 @@
 <section id="tldr"><div class="wrap">
   <h2><span class="num">0</span> 요약</h2>
   <div class="callout navy">
-    <p class="big-quote">FYI는 인재↔기업 플라이휠로, 먼저 <u><mark>하이 탤런트 인재풀</mark>을 확보한다</u> (대학·대기업 출신 등 좋은 인재).&nbsp;</p><p class="big-quote">그 다음, 이 인재를 <u><b>살아있는 데이터</b>로 작동할 수 있는 루프를 확보한다.&nbsp;</u></p>
+    <p class="big-quote">FYI는 인재↔기업 플라이휠로, 먼저 <u><mark>하이 탤런트 인재풀</mark>을 확보한다</u> (대학·대기업 출신 등 좋은 인재)</p><p class="big-quote">그 다음, 이 인재를 <u><b>살아있는 데이터</b>로 작동할 수 있는 루프를 확보한다</u></p>
   </div>
-  <div class="svgwrap" contenteditable="false">
+  <div class="svgwrap">
     <svg class="fig" viewBox="0 0 860 660" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <marker id="ah" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7,3 L0,6 Z" fill="#1f7a4d"></path></marker>
@@ -194,7 +194,7 @@
   <table>
     <tbody><tr><th>질문</th><th>답</th></tr>
     <tr><td>무엇을 보는가</td><td>FYI가 만드는 <b>인재↔기업 플라이휠</b>과 단계별 실행 전략</td></tr>
-    <tr class="hlrow"><td>1단계 (지금·최우선)</td><td><b>하이 탤런트 인재풀 확보</b> — 대학·대기업 출신 등 좋은 인재 (보상금 없이도 지원 1,000여 확인)</td></tr>
+    <tr class="hlrow"><td>1단계 (지금·최우선)</td><td><b>하이 탤런트 인재풀 확보</b> — 대학·대기업 출신 등 좋은 인재 (보상금 없이도 인재 모집 기작은 확인)</td></tr>
     <tr><td>2단계 (다음)</td><td><b>살아있는 인재 DB</b> — 이력서·상태를 계속 갱신(리멤버·링크드인식), 커뮤니티가 라이브하게 유지</td></tr>
     <tr><td>핵심</td><td>좋은 인재를 확보해 <b>기업의 채용 비용을 줄여주는 것</b></td></tr>
     <tr><td>기업 가속</td><td><b>공고비 무료 · 2개월 채용 개런티</b>로 기업 유입을 앞당긴다</td></tr>
@@ -204,7 +204,7 @@
 <!-- 1 -->
 <section id="exec"><div class="wrap">
   <h2><span class="num">1</span> 단계별 FYI 실행 전략</h2>
-  <div class="svgwrap" contenteditable="false">
+  <div class="svgwrap">
     <svg class="fig" viewBox="0 0 860 660" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <marker id="ah2" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7,3 L0,6 Z" fill="#1f7a4d"></path></marker>
@@ -315,10 +315,10 @@
 </div></footer>
 
 <div id="tbar">
-  <button id="eb" onclick="tEdit()">✏️ 편집</button>
+  <button id="eb" onclick="tEdit()" class="on">✅ 편집 중 (끄기)</button>
   <button onclick="tSave()">💾 저장</button>
   <button onclick="window.print()">🖨 PDF</button>
-  <button id="pubb" onclick="tPublish()" style="background:#0f6b53">🚀 발행</button>
+  <button id="pubb" onclick="tPublish()" style="background:#0f6b53" disabled="">⏳ 발행 중...</button>
 </div>
 <script>
 var EDIT=false;
@@ -337,9 +337,9 @@ function cleanClone(){
   return '<!DOCTYPE html>\n'+d.outerHTML;
 }
 async function gh(path,opts){
-  var r=await fetch('https://api.github.com/repos/new-sam/eor-strategy'+path,Object.assign({cache:'no-store',headers:{Authorization:'token '+localStorage.getItem('ghpat'),Accept:'application/vnd.github+json','Content-Type':'application/json'}},opts||{}));
+  var r=await fetch('https://api.github.com/repos/new-sam/eor-strategy'+path,Object.assign({headers:{Authorization:'token '+localStorage.getItem('ghpat'),Accept:'application/vnd.github+json','Content-Type':'application/json'}},opts||{}));
   if(r.status===401){localStorage.removeItem('ghpat');throw new Error('토큰 거부(401). 다시 발행을 눌러 새 토큰을 입력하세요.');}
-  if(!r.ok){throw new Error(path+' -> '+r.status+' '+(await r.text()).slice(0,140));}
+  if(!r.ok){throw new Error(path+' → '+r.status+' '+(await r.text()).slice(0,140));}
   return r.json();
 }
 async function tPublish(){
@@ -347,20 +347,13 @@ async function tPublish(){
   var btn=document.getElementById('pubb');btn.disabled=true;btn.textContent='⏳ 발행 중...';
   try{
     var html=cleanClone();
+    var ref=await gh('/git/ref/heads/main');
+    var commit=await gh('/git/commits/'+ref.object.sha);
     var blob=await gh('/git/blobs',{method:'POST',body:JSON.stringify({content:html,encoding:'utf-8'})});
-    var ok=false,last;
-    for(var i=0;i<5&&!ok;i++){
-      try{
-        var ref=await gh('/git/ref/heads/main');
-        var commit=await gh('/git/commits/'+ref.object.sha);
-        var tree=await gh('/git/trees',{method:'POST',body:JSON.stringify({base_tree:commit.tree.sha,tree:[{path:'micro.html',mode:'100644',type:'blob',sha:blob.sha}]})});
-        var nc=await gh('/git/commits',{method:'POST',body:JSON.stringify({message:'발행 (브라우저 편집)',tree:tree.sha,parents:[ref.object.sha]})});
-        await gh('/git/refs/heads/main',{method:'PATCH',body:JSON.stringify({sha:nc.sha})});
-        ok=true;
-      }catch(e){last=e;var m=(''+e.message);if(m.indexOf('fast forward')<0&&m.indexOf('422')<0)throw e;await new Promise(function(r){setTimeout(r,700);});}
-    }
-    if(!ok)throw last;
-    btn.textContent='✅ 발행됨';alert('발행 완료! 1~2분 뒤 라이브 반영됩니다.');
+    var tree=await gh('/git/trees',{method:'POST',body:JSON.stringify({base_tree:commit.tree.sha,tree:[{path:'micro.html',mode:'100644',type:'blob',sha:blob.sha}]})});
+    var nc=await gh('/git/commits',{method:'POST',body:JSON.stringify({message:'발행 micro (브라우저 편집)',tree:tree.sha,parents:[ref.object.sha]})});
+    await gh('/git/refs/heads/main',{method:'PATCH',body:JSON.stringify({sha:nc.sha})});
+    btn.textContent='✅ 발행됨';alert('발행 완료! 1~2분 뒤 라이브 반영됩니다.\nhttps://new-sam.github.io/eor-strategy/micro.html');
   }catch(e){alert('⚠ 발행 실패: '+e.message);btn.textContent='🚀 발행';}
   finally{btn.disabled=false;setTimeout(function(){btn.textContent='🚀 발행';},3000);}
 }
