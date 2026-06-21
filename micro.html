@@ -315,26 +315,51 @@
 </div></footer>
 
 <div id="tbar">
-  <button id="eb" onclick="tEdit()" class="">✏️ 편집</button>
+  <button id="eb" onclick="tEdit()">✏️ 편집</button>
   <button onclick="tSave()">💾 저장</button>
   <button onclick="window.print()">🖨 PDF</button>
-  <button onclick="tReset()" title="내 편집 지우고 최신 원본으로">↺ 초기화</button>
+  <button id="pubb" onclick="tPublish()" style="background:#0f6b53">🚀 발행</button>
 </div>
 <script>
-var EDIT=false, KEY='fyiMicroEdits_v7';
-try{['v1','v2','v3','v4','v5','v6'].forEach(function(s){localStorage.removeItem('fyiMicroEdits_'+s);});}catch(_){}
-function parts(){return document.querySelectorAll('header.hero, section, footer');}
-function saveEdits(){var d={};parts().forEach(function(e){if(e.id)d[e.id]=e.innerHTML;});localStorage.setItem(KEY,JSON.stringify(d));}
+var EDIT=false;
+function parts(){return document.querySelectorAll('header.hero, header.hd, section, footer');}
 function tEdit(){EDIT=!EDIT;parts().forEach(function(e){e.contentEditable=EDIT;});document.body.classList.toggle('edit-on',EDIT);
-  var b=document.getElementById('eb');b.textContent=EDIT?'✅ 편집 중 (끄기)':'✏️ 편집';b.classList.toggle('on',EDIT);if(!EDIT)saveEdits();}
+  var b=document.getElementById('eb');b.textContent=EDIT?'✅ 편집 중 (끄기)':'✏️ 편집';b.classList.toggle('on',EDIT);}
 function tSave(){parts().forEach(function(e){e.removeAttribute('contenteditable');});document.body.classList.remove('edit-on');
   var html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
-  var blob=new Blob([html],{type:'text/html;charset=utf-8'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='FYI_미시전략_인재플라이휠.html';a.click();
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='TALENT_MICRO_STRATEGY.html';a.click();
   if(EDIT){parts().forEach(function(e){e.contentEditable=true;});document.body.classList.add('edit-on');}}
-function tReset(){if(confirm('내 편집을 지우고 원본으로 되돌릴까요?')){localStorage.removeItem(KEY);location.reload();}}
+function cleanClone(){
+  var d=document.documentElement.cloneNode(true);
+  d.querySelectorAll('#monica-content-root,#monica-writing-entry-btn-root,#monica-reading-highlight-style,[class*="glasp"],[id^="monica"],#savednote').forEach(function(n){n.remove();});
+  var b=d.querySelector('body'); if(b){b.removeAttribute('monica-id');b.removeAttribute('monica-version');if(b.getAttribute('class')==='')b.removeAttribute('class');}
+  d.querySelectorAll('[contenteditable]').forEach(function(n){n.removeAttribute('contenteditable');});
+  return '<!DOCTYPE html>\n'+d.outerHTML;
+}
+async function gh(path,opts){
+  var r=await fetch('https://api.github.com/repos/new-sam/eor-strategy'+path,Object.assign({headers:{Authorization:'token '+localStorage.getItem('ghpat'),Accept:'application/vnd.github+json','Content-Type':'application/json'}},opts||{}));
+  if(r.status===401){localStorage.removeItem('ghpat');throw new Error('토큰 거부(401). 다시 발행을 눌러 새 토큰을 입력하세요.');}
+  if(!r.ok){throw new Error(path+' → '+r.status+' '+(await r.text()).slice(0,140));}
+  return r.json();
+}
+async function tPublish(){
+  if(!localStorage.getItem('ghpat')){var t=prompt('GitHub 토큰을 한 번만 입력하세요 (eor-strategy repo, Contents 쓰기 권한).');if(!t)return;localStorage.setItem('ghpat',t.trim());}
+  var btn=document.getElementById('pubb');btn.disabled=true;btn.textContent='⏳ 발행 중...';
+  try{
+    var html=cleanClone();
+    var ref=await gh('/git/ref/heads/main');
+    var commit=await gh('/git/commits/'+ref.object.sha);
+    var blob=await gh('/git/blobs',{method:'POST',body:JSON.stringify({content:html,encoding:'utf-8'})});
+    var tree=await gh('/git/trees',{method:'POST',body:JSON.stringify({base_tree:commit.tree.sha,tree:[{path:'micro.html',mode:'100644',type:'blob',sha:blob.sha}]})});
+    var nc=await gh('/git/commits',{method:'POST',body:JSON.stringify({message:'발행 micro (브라우저 편집)',tree:tree.sha,parents:[ref.object.sha]})});
+    await gh('/git/refs/heads/main',{method:'PATCH',body:JSON.stringify({sha:nc.sha})});
+    btn.textContent='✅ 발행됨';alert('발행 완료! 1~2분 뒤 라이브 반영됩니다.\nhttps://new-sam.github.io/eor-strategy/micro.html');
+  }catch(e){alert('⚠ 발행 실패: '+e.message);btn.textContent='🚀 발행';}
+  finally{btn.disabled=false;setTimeout(function(){btn.textContent='🚀 발행';},3000);}
+}
 window.addEventListener('beforeprint',function(){document.querySelectorAll('details').forEach(function(d){d.dataset.w=d.open?'1':'0';d.open=true;});});
 window.addEventListener('afterprint',function(){document.querySelectorAll('details').forEach(function(d){d.open=d.dataset.w==='1';});});
-/* 자동복원(loadEdits) 비활성화 — 파일이 항상 원본 */
+try{localStorage.removeItem('eorEdits_v1');}catch(e){}
 </script>
 
 </body></html>
