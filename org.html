@@ -159,6 +159,7 @@
     width: 6px; height: 6px; border-radius: 2px; background: var(--ink);
   }
   .team-node .kpis li + li { margin-top: 3px; }
+  .team-node .kpis li .val { color: var(--accent); font-weight: 800; }
   .team-node .kpis .kpi-tag {
     font-size: 10px; font-weight: 800; letter-spacing: 1px; color: var(--gray);
     display: block; margin-bottom: 5px;
@@ -225,6 +226,8 @@
     padding: 4px 10px;
     font-size: 13px; font-weight: 700;
   }
+  .metric .mgoal + .mgoal { margin-left: 6px; }
+  .metric .mgoal .step { color: var(--gray); font-weight: 700; }
   .metric .mgoal .fill {
     color: var(--accent);
     border-bottom: 2px solid var(--accent);
@@ -380,7 +383,7 @@
           <div class="oneliner">기업을 모객한다</div>
           <ul class="kpis">
             <span class="kpi-tag">KPI</span>
-            <li>개설된 단톡 수 (JD 확보)</li>
+            <li>개설된 단톡 수 (JD 확보) <span class="val">월 11개</span></li>
           </ul>
         </div>
         <div class="people">
@@ -398,8 +401,8 @@
           <div class="oneliner">지원자를 모객한다</div>
           <ul class="kpis">
             <span class="kpi-tag">KPI</span>
-            <li>지원 수</li>
-            <li>리드타임</li>
+            <li>공고당 지원 수 <span class="val">15 → 30개</span></li>
+            <li>리드타임 <span class="val">5 → 10일</span></li>
             <li>채용 중 FYI 비율</li>
           </ul>
         </div>
@@ -420,8 +423,8 @@
           <div class="oneliner">모객된 기업에 인재를 매칭한다</div>
           <ul class="kpis">
             <span class="kpi-tag">KPI</span>
-            <li>리드타임</li>
-            <li>채용 전환율</li>
+            <li>리드타임 <span class="val">25일 이내</span></li>
+            <li>채용 전환율 <span class="val">60%</span></li>
           </ul>
         </div>
         <div class="people">
@@ -440,7 +443,7 @@
   <!-- ===================== TARGETS ===================== -->
   <div class="sec-title">
     <h2>목표 정의</h2>
-    <span>산식과 달성 숫자 — 파란 칸은 채워서 확정</span>
+    <span>산식과 달성 숫자 · 파란 숫자는 확정 목표</span>
   </div>
 
   <div class="targets">
@@ -450,21 +453,23 @@
       <div class="metric">
         <div class="mname">개설된 단톡 수</div>
         <div class="mdef">= 이번 달 JD 확보 후 단톡을 연 기업 수</div>
-        <div class="mgoal">목표 · 월 <span class="fill"></span> 개</div>
+        <div class="mgoal">목표 · 월평균 <span class="fill">11</span> 개</div>
       </div>
     </div>
 
     <div class="target">
       <h3><small>FYI</small>인재</h3>
       <div class="metric">
-        <div class="mname">지원 수</div>
-        <div class="mdef">= 이번 달 FYI를 통해 들어온 지원자 수</div>
-        <div class="mgoal">목표 · 월 <span class="fill"></span> 명</div>
+        <div class="mname">채용 공고 당 확보 지원 수</div>
+        <div class="mdef">= 공고 1건에 들어온 지원자 수</div>
+        <div class="mgoal"><span class="step">1차</span> <span class="fill">15</span> 개</div>
+        <div class="mgoal"><span class="step">목표</span> <span class="fill">30</span> 개</div>
       </div>
       <div class="metric">
         <div class="mname">리드타임</div>
-        <div class="mdef">= 지원 접수 → 채용 확정까지 걸린 시간</div>
-        <div class="mgoal">목표 · <span class="fill"></span> 일 이내</div>
+        <div class="mdef">= 공고 오픈 → 지원 수 확보까지 걸린 시간</div>
+        <div class="mgoal"><span class="step">15개</span> <span class="fill">5</span> 일 이내</div>
+        <div class="mgoal"><span class="step">30개</span> <span class="fill">10</span> 일 이내</div>
       </div>
       <div class="metric">
         <div class="mname">채용 중 FYI 비율</div>
@@ -481,15 +486,15 @@
       <div class="metric">
         <div class="mname">리드타임</div>
         <div class="mdef">= 단톡 개설일 → 계약 체결일</div>
-        <div class="mgoal">목표 · <span class="fill"></span> 일 이내</div>
+        <div class="mgoal">목표 · <span class="fill">25</span> 일 이내</div>
       </div>
       <div class="metric">
         <div class="mname">채용 전환율</div>
         <div class="mdef">= 클로징 딜 수 ÷ 개설된 단톡 수</div>
-        <div class="mgoal">목표 · <span class="fill"></span> %</div>
+        <div class="mgoal">목표 · <span class="fill">60</span> %</div>
       </div>
       <div class="result-formula">
-        월 클로징 딜 = 단톡 수 × 전환율 = <span class="fill"></span> 건
+        월 클로징 딜 = 단톡 수 11 × 전환율 60% = <span class="fill">6.6</span> 건
       </div>
     </div>
 
@@ -518,7 +523,7 @@
 
   </div>
 
-  <footer><b>파란 칸</b> = 목표 숫자 채워서 확정 · 유입은 DRI 없이 공동 운영</footer>
+  <footer><b>남은 칸</b> = 채용 중 FYI 비율 목표 미확정 · 유입은 DRI 없이 공동 운영</footer>
 
 </div>
 </body>
